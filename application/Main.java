@@ -41,6 +41,8 @@ public class Main {
 
         System.out.println("Product data: " + product);
 
+        System.out.println(" ");
+
     }
 
 }
