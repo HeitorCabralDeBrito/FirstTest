@@ -1,47 +1,73 @@
 package src.application;
 
-import src.entities.Account;
-import src.exceptions.BusinessException;
+import src.entities.Products;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+        sc.useLocale(Locale.US);
 
-        System.out.println("Enter account data:");
+        String response;
 
-        System.out.print("Number: ");
-        int accountNumber = sc.nextInt();
+        System.out.print("Product Name: ");
+        String name = sc.nextLine();
 
-        System.out.print("Holder: ");
+        System.out.print("Product price: ");
+        double price = sc.nextDouble();
+
+        System.out.print("Product quantity: ");
+        int quantity = sc.nextInt();
+
         sc.nextLine();
-        String accountHolder = sc.nextLine();
 
-        System.out.print("Initial balance: ");
-        double initialBalance = sc.nextDouble();
+        Products product = new Products(name, price, quantity);
 
-        System.out.print("Withdraw limit: ");
-        double withdrawLimit = sc.nextDouble();
+        ///  Without Total
 
-        Account acc = new Account(accountNumber, accountHolder, initialBalance, withdrawLimit);
+        String[] linesWithoutTotal = new String[] {
+                product.getProductName(),
+                String.valueOf(product.getProductPrice()),
+                String.valueOf(product.getProductQuantity()),
+        };
 
-        System.out.println();
+        String path = "/Users/fernando/Documents/Exercicio/products.txt ";
 
-        System.out.print("Enter amount for withdraw: ");
-        double ammount = sc.nextDouble();
-
-        try {
-            acc.withdraw(ammount);
-            System.out.printf("New Balance: %.2f%n", acc.getInitialBalance());
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            for (String line : linesWithoutTotal){
+                bw.write(line);
+                bw.newLine();
+            }
         }
-        catch (BusinessException e){
-            System.out.println(e.getMessage());
+        catch (IOException e){
+            e.printStackTrace();
         }
 
-        sc.close();
+        /// With Total
+
+        String[] linesWithTotal = new String[] {
+                product.getProductName(),
+                String.valueOf(product.getTotal())
+        };
+
+        path = "/Users/fernando/Documents/Exercicio/out/summary.txt ";
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            for (String line : linesWithTotal){
+                bw.write(line);
+                bw.newLine();
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
 
     }
 
